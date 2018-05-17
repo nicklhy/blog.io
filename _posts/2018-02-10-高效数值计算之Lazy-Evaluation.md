@@ -16,7 +16,7 @@ published: true
 
 
 
-注：本文大部分代码参考了博文[mshadow的原理--MXNet](http://www.cnblogs.com/heguanyou/p/7545344.html)。
+注：本文大部分代码参考了mshadow的[guide代码](https://github.com/dmlc/mshadow/tree/master/guide/exp-template)。
 
 
 
@@ -389,4 +389,3 @@ for(int i=0; i<n; i++)
 ## 参考
 
 * [mhadow](https://github.com/dmlc/mshadow)
-* [mshadow的原理--MXNet](http://www.cnblogs.com/heguanyou/p/7545344.html)
