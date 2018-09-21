@@ -98,7 +98,7 @@ Gaussian Process和Dirichlet Process应用的intuition都一样，即我们的�
 
   $$p(G|\theta)=\frac{p(\theta |G)p(G)}{p(\theta)}$$
 
-另外由于 $$\theta=(\pi_1, \cdots, \pi_K)\sim \text{Dirichlet}(\alpha_1, \cdots, \alpha_K)$$ 且 $$Z|(\pi_1, \cdots, \pi_K)\sim \text{Discrete}(\pi_1, \cdots, \pi_K)$$ ，利用贝叶斯公式经过一定推导可以得到 
+另外由于 $$\theta=(\pi_1,\cdots,\pi_K)\sim\text{Dirichlet}(\alpha_1,\cdots,\alpha_K)$$且$$Z|(\pi_1,\cdots,\pi_K)\sim\text{Discrete}(\pi_1,\cdots,\pi_K)$$，利用贝叶斯公式经过一定推导可以得到 
 
   $$Z\sim \text{Discrete}(\frac{\alpha_1}{\sum^K_{k=1}\alpha_k}, \cdots, \frac{\alpha_K}{\sum^K_{k=1}\alpha_k})$$
 
