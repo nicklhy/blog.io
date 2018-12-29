@@ -24,15 +24,15 @@ published: true
 
 ## TVM概览
 
-首先看一下下方TVM的系统概览图
+首先看一下TVM的系统概览图
 
 ![](/images/post/2018/12/tvm_system_overview.png)
 
 可以看出使用TVM进行模型部署的完整流程包括：
 
 * TF、PyTorch、MXNet等frontend深度学习框架的模型到计算图IR的转换；
-* 计算图IR的graph优化，得到Optimized Computational Graph;
-* 对计算图中的每个op得到一种用Tensor Expression描述的Tensor计算表达式，并针对所需的硬件平台，生成最小的计算原语(primitives)；
+* 对原始计算图IR进行graph优化，得到Optimized Computational Graph;
+* 对计算图中的每个op获取用tensor expression language描述的Tensor计算表达式，并针对所需的硬件平台，选择最小计算原语(primitives)生成具体的schedule；
 * 使用某种基于机器学习的Automated Optimizer生成经过优化的Low Level Loop Program；
 * 生成特定于硬件设备的二进制程序；
 * 生成可以部署的module；
@@ -142,7 +142,7 @@ cost model相当于一个黑盒优化器，帮助我们在尽量少遍历各种s
 
 详细教程还请参考[官方tutorial列表](https://docs.tvm.ai/tutorials/index.html#auto-tuning)，这里只简单谈一下我在具体使用过程中遇到的一些坑：
 
-* 如果是相对比较深的神经网络（如resnet152）进行调优，建议把timeout设置大一些，如100s之类，否则很多尝试实际上都因为超时而拿不到结果，自然cost model学习到的信息也是不靠谱的；
+* 如果要对比较深的神经网络（如resnet152）进行调优，建议把timeout设置大一点（如100s），否则很多尝试实际上都因为超时而拿不到结果，自然cost model学习到的信息也是不靠谱的；
 * 如果网络比较复杂，n_trial也可以设置大一点，保证每一类setting都可以搜索充分；
-* 如果使用nnvm作为计算图IR，并且把opt_level设置成3，则有可能会遇到模型编译完成以后预测结果和原始模型不一致的问题，这实际上是nnvm的bug，Tianqi大神亲自在[论坛上](https://discuss.tvm.ai/t/different-output-values-when-setting-opt-level-3-in-nnvm-compiler-build-config/1392/4?u=nicklhy)回复了我，并建议使用TVM的第二代IR：`tvm.relay`；
-* 原以为这个auto tuning应该是一个非常消耗GPU的操作，尤其是看到[Scale up measurement by using multiple devices](https://docs.tvm.ai/tutorials/autotvm/tune_nnvm_cuda.html#scale-up-measurement-by-using-multiple-devices)这一节的时候，想当然的觉得用多个GPU卡能让这个搜索过程快很多，实际却发现大部分时候GPU都是空闲状态，真正制约这个的是CPU，所以，请尽量选择CPU核心数量多一些的服务器；
+* 如果使用nnvm作为计算图IR，并且把opt_level设置成3，则有可能会遇到模型编译完成以后预测结果和原始模型不一致的问题，这实际上是nnvm的bug，Tianqi大神在[论坛上](https://discuss.tvm.ai/t/different-output-values-when-setting-opt-level-3-in-nnvm-compiler-build-config/1392/4?u=nicklhy)有回复，并建议使用TVM的第二代IR：`tvm.relay`；
+* 原以为这个auto tuning应该是一个非常消耗GPU的操作，尤其是看到[Scale up measurement by using multiple devices](https://docs.tvm.ai/tutorials/autotvm/tune_nnvm_cuda.html#scale-up-measurement-by-using-multiple-devices)这一节的时候，想当然的觉得用多GPU卡能让这个搜索过程加速很多，实际运行了几次之后却发现大部分时间GPU都是空闲状态，真正制约整个过程的反而是CPU，所以，请尽量选择CPU核心数多一些的服务器；
